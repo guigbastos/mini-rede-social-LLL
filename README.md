@@ -58,9 +58,8 @@ Certifique-se de ter o [Python 3](https://www.python.org/) e o [PostgreSQL](http
 
 <!-- A API estará rodando em http://127.0.0.1:5000/ -->
 
-🛣️ Roadmap (Próximos Passos)
-[ ] Implementação do Sistema de Comentários nas postagens.
+## 🛣️ Roadmap
 
-[ ] Refatoração e documentação de rotas.
-
-[ ] Desenvolvimento de um Front-end para consumir a API.
+- [ ] Implementação do Sistema de Comentários nas postagens.
+- [ ] Refatoração e documentação de rotas.
+- [ ] Desenvolvimento de um Front-end para consumir a API.
