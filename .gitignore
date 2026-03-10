@@ -7,4 +7,6 @@ env/
 
 .env
 
-.vscode/ 
+.vscode/
+
+docker-compose.yml
