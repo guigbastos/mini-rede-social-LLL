@@ -2,19 +2,21 @@
 
 Uma API RESTful robusta para uma rede social, desenvolvida com Python e Flask. Este projeto foca em boas práticas de Engenharia de Software, incluindo Clean Code, padrão de arquitetura em camadas (Controller, Service, Repository) e segurança de dados.
 
-## 🚀 Funcionalidades (O que já está pronto)
+## 🚀 Funcionalidades
 
-**Autenticação e Segurança:**
-    * Criação de usuários com senhas criptografadas (Hash).
-    * Login seguro com geração de tokens JWT (JSON Web Tokens).
-    * Rotas protegidas que exigem autenticação.
-**Gestão de Postagens:** 
-    * CRUD completo de postagens.
-    * Exclusão lógica (*Soft Delete*) para manter a integridade do banco de dados.
-**Interações Sociais:**
-    * **Sistema de Seguidores:** Relacionamento auto-referencial (many-to-many) permitindo seguir e deixar de seguir usuários.
-    * **Sistema de Curtidas:** Relacionamento (many-to-many) entre usuários e postagens.
-    * **Feed Customizado:** Cruzamento avançado de dados via banco relacional (Subqueries/JOINs) para entregar um feed exclusivo apenas com as postagens de quem o usuário segue.
+* **Autenticação e Segurança:**
+  * Criação de usuários com senhas criptografadas (Hash).
+  * Login seguro com geração de tokens JWT (JSON Web Tokens).
+  * Rotas protegidas que exigem autenticação.
+
+* **Gestão de Postagens:**
+  * CRUD completo de postagens.
+  * Exclusão lógica (*Soft Delete*) para manter a integridade do banco de dados.
+
+* **Interações Sociais:**
+  * **Sistema de Seguidores:** Relacionamento auto-referencial (many-to-many) permitindo seguir e deixar de seguir usuários.
+  * **Sistema de Curtidas:** Relacionamento (many-to-many) entre usuários e postagens.
+  * **Feed Customizado:** Cruzamento avançado de dados via banco relacional (Subqueries/JOINs) para entregar um feed exclusivo apenas com as postagens de quem o usuário segue.
 
 ## 🛠️ Tecnologias Utilizadas
 
