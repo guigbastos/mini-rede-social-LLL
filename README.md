@@ -59,6 +59,5 @@ Certifique-se de ter o [Python 3](https://www.python.org/) e o [PostgreSQL](http
 
 ## 🛣️ Roadmap
 
-- [ ] Implementação do Sistema de Comentários nas postagens.
 - [ ] Refatoração e documentação de rotas.
 - [ ] Desenvolvimento de um Front-end para consumir a API.
