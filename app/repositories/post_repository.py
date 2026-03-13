@@ -57,3 +57,15 @@ class PostRepository:
         if PostRepository.is_liked_by(post, user):
             post.likes.remove(user)
             db.session.commit()
+
+    @staticmethod
+    def has_retweeted(original_post_id: int, user_id: int) -> bool:
+        from app.models.post import Post
+
+        retweet = Post.query.filter_by(
+            original_post_id=original_post_id,
+            author_id=user_id,
+            is_active=True
+        ).first()
+
+        return retweet is not None

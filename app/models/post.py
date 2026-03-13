@@ -15,7 +15,11 @@ class Post(db.Model):
     is_active = db.Column(db.Boolean, default=True, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
+    original_post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=True)
+
     author = db.relationship('User', backref=db.backref('posts', lazy=True))
+    original_post = db.relationship('Post', remote_side=[id], backref='retweets')
+
 
     likes = db.relationship(
         'User',
@@ -26,3 +30,26 @@ class Post(db.Model):
 
     def __repr__(self):
         return f'<Post {self.id} by User {self.author_id}>'
+
+    def to_dict(self):
+        data = {
+            "id": self.id,
+            "content": self.content,
+            "created_at": self.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "author_id": self.author_id,
+            "author_name": self.author.username,
+            "likes_count": self.likes.count(),
+            "is_retweet": self.original_post is not None,
+            "original_post": None
+        }
+
+        if self.original_post:
+            data["original_post"] = {
+                "id": self.original_post.id,
+                "content": self.original_post.content,
+                "author_id": self.original_post.author_id,
+                "likes_count": self.original_post.likes.count(),
+                "created_at": self.original_post.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            }
+        
+        return data

@@ -75,3 +75,27 @@ class PostService:
             raise ValueError("Você não curtiu esta postagem para poder descurtir.")
         
         PostRepository.unlike(post, user)
+
+    @staticmethod
+    def retweet_post(original_post_id: id, user_id: int) -> None:
+        user = UserRepository.get_by_id(user_id)
+        original_post = PostRepository.get_by_id(original_post_id)
+
+        if not user:
+            raise ValueError("Usuário não encontrado.")
+        
+        if not original_post or not original_post.is_active:
+            raise ValueError("Postagem original não encontrada ou removida.")
+        
+        if PostRepository.has_retweeted(original_post_id, user_id):
+            raise ValueError("Você já retweetou esta postagem.")
+        
+        from app.models.post import Post
+
+        novo_retweet = Post(
+            content="",
+            author_id=user_id,
+            original_post_id=original_post.id
+        )
+
+        PostRepository.create(novo_retweet)

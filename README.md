@@ -48,8 +48,7 @@ Certifique-se de ter o [Python 3](https://www.python.org/) e o [PostgreSQL](http
     pip install -r requirements.txt
 
 4. **Configure as variáveis de ambiente:**
-    => Crie um arquivo chamado .env na raiz do projeto copiando o modelo
-
+    => Crie um arquivo chamado .env na raiz do projeto copiando o modelo.<br>
     => Preencha os dados do seu banco PostgreSQL e crie suas chaves secretas.
 
 5. **Inicie o servidor:**
@@ -60,6 +59,7 @@ Certifique-se de ter o [Python 3](https://www.python.org/) e o [PostgreSQL](http
 
 ## 🛣️ Roadmap
 
+- [ ] Implementação do sistema de retweet nas postagens.
 - [ ] Implementação do Sistema de Comentários nas postagens.
 - [ ] Refatoração e documentação de rotas.
 - [ ] Desenvolvimento de um Front-end para consumir a API.
