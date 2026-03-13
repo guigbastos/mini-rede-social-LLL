@@ -22,6 +22,7 @@ def create_app():
 
     from app.models.user import User
     from app.models.post import Post
+    from app.models.comment import Comment
 
     with app.app_context():
         db.create_all()
@@ -31,6 +32,9 @@ def create_app():
 
     from app.controllers.post_controller import post_bp
     app.register_blueprint(post_bp)
+
+    from app.controllers.comment_controller import comment_bp
+    app.register_blueprint(comment_bp)
 
     @app.route("/")
     def index():

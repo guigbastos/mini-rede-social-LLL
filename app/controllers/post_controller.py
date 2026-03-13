@@ -169,17 +169,19 @@ def retweet_post(post_id):
 @post_bp.route('/<int:post_id>', methods=['GET'])
 @jwt_required()
 def get_post_details(post_id):
+    current_user_id = int(get_jwt_identity())
     try:
-        from app.repositories.post_repository import PostRepository
-        post = PostRepository.get_by_id(post_id)
+        resultado = PostService.retweet_post(original_post_id=post_id, user_id=current_user_id)
+        status_code = 201 if resultado["acao"] == "adicionado" else 200
 
-        if not post or not post.is_active:
-            return jsonify({"Erro": "Postagem não encontrada ou removida."}), 404
-        
-        return jsonify(post.to_dict()), 200
+        return jsonify({
+            "mensagem": resultado["mensagem"],
+            "acao": resultado["acao"]
+        }), status_code
     
+    except ValueError as e:
+        return jsonify({"Erro": str(e)}), 400
     except Exception as e:
         import traceback
         traceback.print_exc()
         return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
-    

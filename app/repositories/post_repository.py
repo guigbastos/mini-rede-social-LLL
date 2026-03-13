@@ -28,7 +28,7 @@ class PostRepository:
     
     @staticmethod
     def delete(post: Post) -> None:
-        db.session.delete(post)
+        post.is_active = False
         db.session.commit()
 
     @staticmethod
@@ -69,3 +69,13 @@ class PostRepository:
         ).first()
 
         return retweet is not None
+
+    @staticmethod
+    def get_user_retweet(original_post_id: int, user_id: int):
+        from app.models.post import Post
+
+        return Post.query.filter_by(
+            original_post_id=original_post_id,
+            author_id=user_id,
+            is_active=True
+        ).first()

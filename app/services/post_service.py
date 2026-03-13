@@ -87,15 +87,23 @@ class PostService:
         if not original_post or not original_post.is_active:
             raise ValueError("Postagem original não encontrada ou removida.")
         
-        if PostRepository.has_retweeted(original_post_id, user_id):
-            raise ValueError("Você já retweetou esta postagem.")
+        existing_retweet = PostRepository.get_user_retweet(original_post_id, user_id)
+
+        if existing_retweet:
+            existing_retweet.is_active = False
+
+            PostRepository.save(existing_retweet)
+            return {"acao": "removido", "mensagem": "Retweet desfeito com succeso!"}
+        else:
+            from app.models.post import Post
+            novo_retweet = Post(
+                content="",
+                author_id=user_id,
+                original_post_id=original_post.id
+            )
+            PostRepository.save(novo_retweet)
+            return {"acao": "adicionado", "mensagem": "Retweet feito com succeso!"}
+
+
+
         
-        from app.models.post import Post
-
-        novo_retweet = Post(
-            content="",
-            author_id=user_id,
-            original_post_id=original_post.id
-        )
-
-        PostRepository.create(novo_retweet)
