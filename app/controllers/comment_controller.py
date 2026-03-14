@@ -7,6 +7,39 @@ comment_bp = Blueprint('comment_bp', __name__)
 @comment_bp.route('/posts/<int:post_id>/comments', methods=['POST'])
 @jwt_required()
 def create_comment(post_id):
+    """
+    ---
+    tags:
+       - Comments
+    security:
+      - Bearer: []
+    parameters:
+       - in: path
+         name: post_id
+         type: integer
+         required: true
+         description: ID of the post to comment
+       - in: body
+         name: body
+         required: true
+         schema:
+           type: object
+           required:
+             - content
+           properties:
+             content:
+               type: string
+               example: "This is my first comment!"
+    responses:
+       201:
+        description: Comment created successfully
+       400:
+        description: Validation error (e.g., empty content)
+       401:
+        description: Missing or invalid token
+       500:
+        description: Internal server error
+    """
     current_user_id = int(get_jwt_identity())
     data = request.get_json()
 
@@ -32,6 +65,28 @@ def create_comment(post_id):
 @comment_bp.route('/posts/<int:post_id>/comments', methods=['GET'])
 @jwt_required()
 def get_comments(post_id):
+    """
+    ---
+    tags:
+       - Comments
+    security:
+      - Bearer: []
+    parameters:
+       - in: path
+         name: post_id
+         type: integer
+         required: true
+         description: ID of the post to retrieve comments from
+    responses:
+       200:
+        description: Comments retrieved successfully
+       400:
+        description: Validation error
+       401:
+        description: Missing or invalid token
+       500:
+        description: Internal server error
+    """
     try:
         comments = CommentService.get_comments_by_post(post_id)
 

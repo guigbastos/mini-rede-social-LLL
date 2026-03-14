@@ -92,7 +92,7 @@ class PostService:
         if existing_retweet:
             existing_retweet.is_active = False
 
-            PostRepository.save(existing_retweet)
+            PostRepository.update(existing_retweet)
             return {"action": "removed", "message": "Removed retweet."}
         else:
             from app.models.post import Post
@@ -101,7 +101,7 @@ class PostService:
                 author_id=user_id,
                 original_post_id=original_post.id
             )
-            PostRepository.save(new_retweet)
+            PostRepository.create(new_retweet)
             return {"action": "added", "message": "Retweeted!"}
 
 
