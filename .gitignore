@@ -10,3 +10,5 @@ env/
 .vscode/
 
 docker-compose.yml
+
+.DS_store
