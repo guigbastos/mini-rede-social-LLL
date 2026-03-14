@@ -19,15 +19,15 @@ def create_comment(post_id):
             post_id=post_id
         )
 
-        return jsonify({"mensagem": "Comentário adicionado!", "comentario": new_comment.to_dict()}), 201
+        return jsonify({"message": "Comment created successfully!", "comment": new_comment.to_dict()}), 201
     
     except ValueError as e:
-        return jsonify({"erro": str(e)}), 400
+        return jsonify({"error": str(e)}), 400
     
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return jsonify({"erro": "Ocorreu um erro interno no servidor"}), 500
+        return jsonify({"error": "An internal server error occurred."}), 500
     
 @comment_bp.route('/posts/<int:post_id>/comments', methods=['GET'])
 @jwt_required()
@@ -40,11 +40,11 @@ def get_comments(post_id):
         return jsonify(comments_json), 200
     
     except ValueError as e:
-        return jsonify({"erro": str(e)}), 400
+        return jsonify({"error": str(e)}), 400
     
     except Exception as e:
         import traceback
         traceback.print_exc()
 
-        return jsonify({"erro": "Ocorreu um erro interno no servidor"}), 500
+        return jsonify({"error": "An internal server error occurred."}), 500
     

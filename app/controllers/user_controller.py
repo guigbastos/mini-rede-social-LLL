@@ -10,7 +10,7 @@ def register_user():
     data = request.get_json()
 
     if not data or not data.get('username') or not data.get('email') or not data.get('password'):
-        return jsonify({"Erro":"Os campos username, email e password são obrigatórios."}), 400
+        return jsonify({"Error":"Username, mail and password are required."}), 400
     try:
         new_user = UserService.create_user(
             username=data['username'],
@@ -18,26 +18,26 @@ def register_user():
             password=data['password']
         )
         return jsonify({
-            "mensagem": "Usuário criado com sucesso!",
+            "message": "User created successfully!",
             "id": new_user.id,
             "username": new_user.username,
             "email": new_user.email,
             "role": new_user.role
         }), 201
     except ValueError as e:
-        return jsonify({"Erro": str(e)}), 400
+        return jsonify({"Error": str(e)}), 400
     except Exception as e:
         import traceback
         traceback.print_exc()
 
-        return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
+        return jsonify({"Error": "An internal server error occurred."}), 500
     
 @user_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
 
     if not data or not data.get('email') or not data.get('password'):
-        return jsonify({"Erro":"Os campos email e senha são obrigatórios."}), 400
+        return jsonify({"Error":"Mail and password are required."}), 400
     
     try: 
         user = UserService.authenticate(
@@ -46,12 +46,12 @@ def login():
         )
 
         if not user: 
-            return jsonify({"Erro":"Email e/ou senha incorretos."}), 401
+            return jsonify({"Error":"Mail or password are incorrect."}), 401
         
         token = create_access_token(identity=str(user.id))
 
         return jsonify({
-            "mensagem": "Login realizado com sucesso!",
+            "message": "Login successful!",
             "token": token
         }), 200
     
@@ -59,7 +59,7 @@ def login():
         import traceback
         traceback.print_exc()
 
-        return jsonify({"erro": "Ocorreu um erro interno no servidor.", "detalhes": str(e)}), 500
+        return jsonify({"error": "An internal server error occurred.", "details": str(e)}), 500
     
 @user_bp.route('/<int:user_id>/follow', methods=['POST'])
 @jwt_required()
@@ -71,15 +71,15 @@ def follow(user_id):
             follower_id = current_user_id,
             followed_id = user_id
         )
-        return jsonify({"mensagem": "Você começou a seguir este usuário."}), 200
+        return jsonify({"message": "You started following this user."}), 200
     
     except ValueError as e:
-        return jsonify({"Erro": str(e)}), 400
+        return jsonify({"Error": str(e)}), 400
     except Exception as e:
         import traceback
         traceback.print_exc()
 
-        return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
+        return jsonify({"Error": "An internal server error occurred."}), 500
     
 @user_bp.route('/<int:user_id>/unfollow', methods=['POST'])
 @jwt_required()
@@ -91,14 +91,14 @@ def unfollow(user_id):
             follower_id = current_user_id,
             followed_id = user_id
         )
-        return jsonify({"mensagem": "Você deixou de seguir este usuário."}), 200
+        return jsonify({"message": "You stopped following this user."}), 200
     
     except ValueError as e:
-        return jsonify({"Erro": str(e)}), 400
+        return jsonify({"Error": str(e)}), 400
 
     except Exception as e:
         import traceback
         traceback.print_exc()
 
-    return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
+    return jsonify({"Error": "An internal server error occurred."}), 500
 

@@ -13,7 +13,7 @@ def create_post():
     current_user_id = get_jwt_identity()
 
     if not data or not data.get('content'):
-        return jsonify({"Erro": "A postagem não pode ser vazia."})
+        return jsonify({"Error": "Post content cannot be empty."})
     
     try: 
         new_post = PostService.create_post(
@@ -21,19 +21,19 @@ def create_post():
             content=data['content']
         )
         return jsonify({
-            "mensagem": "Postagem criada com sucesso!",
+            "message": "Post created successfully!",
             "id": new_post.id,
             "content": new_post.content,
             "created_at": new_post.created_at.isoformat(),
             "author_id": new_post.author_id,
         }), 201
     except ValueError as e:
-        return jsonify({"Erro": str(e)}), 400
+        return jsonify({"Error": str(e)}), 400
     
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
+        return jsonify({"Error": "An internal server error occurred."}), 500
     
 @post_bp.route('/', methods=['GET'])
 @jwt_required()
@@ -55,7 +55,7 @@ def get_feed():
         import traceback
         traceback.print_exc()
 
-        return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
+        return jsonify({"Error": "An internal server error occurred."}), 500
     
 @post_bp.route('/following', methods=['GET'])
 @jwt_required()
@@ -78,7 +78,7 @@ def get_following_feed():
         import traceback
         traceback.print_exc()
 
-        return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
+        return jsonify({"Error": "An internal server error occurred."}), 500
     
     
 @post_bp.route('/<int:post_id>', methods=['DELETE'])
@@ -89,7 +89,7 @@ def delete_post(post_id):
     try:
         user = UserRepository.get_by_id(current_user_id)
         if not user:
-            return jsonify({"Erro": "Usuário não encontrado."}), 404
+            return jsonify({"Error": "User not found."}), 404
         
         PostService.delete_post(
             post_id=post_id,
@@ -97,17 +97,17 @@ def delete_post(post_id):
             requesting_user_role=user.role
         )
 
-        return jsonify({"mensagem": "Postagem excluída com sucesso!"}), 200
+        return jsonify({"message": "Post deleted successfully!"}), 200
     
     except ValueError as e:
-        return jsonify({"Erro": str(e)}), 404 #404 -> Not found
+        return jsonify({"Error": str(e)}), 404 #404 -> Not found
     except PermissionError as e:
-        return jsonify({"Erro": str(e)}), 403 #403 -> Forbidden
+        return jsonify({"Error": str(e)}), 403 #403 -> Forbidden
     except Exception as e:
         import traceback
         traceback.print_exc()
 
-        return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
+        return jsonify({"Error": "An internal server error occurred."}), 500
     
 @post_bp.route('/<int:post_id>/like', methods=['POST'])
 @jwt_required()
@@ -119,15 +119,15 @@ def like_post(post_id):
             post_id=post_id,
             user_id=current_user_id
         )
-        return jsonify({"mensagem": "Você curtiu esta postagem."}), 200
+        return jsonify({"message": "You liked this post."}), 200
     
     except ValueError as e:
-        return jsonify({"Erro": str(e)}), 400
+        return jsonify({"Error": str(e)}), 400
     except Exception as e:
         import traceback
         traceback.print_exc()
 
-        return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
+        return jsonify({"Error": "An internal server error occurred."}), 500
     
 @post_bp.route('/<int:post_id>/dislike', methods=['POST'])
 @jwt_required
@@ -139,15 +139,15 @@ def dislike_post(post_id):
             post_id=post_id,
             user_id=current_user_id
         )
-        return jsonify({"mensagem": "Você descurtiu esta postagem."}), 200
+        return jsonify({"message": "You removed your like from this post."}), 200
     
     except ValueError as e:
-        return jsonify({"Erro": str(e)}), 400
+        return jsonify({"Error": str(e)}), 400
     except Exception as e:
         import traceback
         traceback.print_exc()
         
-        return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
+        return jsonify({"Error": "An internal server error occurred."}), 500
     
 @post_bp.route('/<int:post_id>/retweet', methods=['POST'])
 @jwt_required()
@@ -156,32 +156,32 @@ def retweet_post(post_id):
 
     try:
         PostService.retweet_post(original_post_id=post_id, user_id=current_user_id)
-        return jsonify({"mensagem": "Post retweetado!"}), 201
+        return jsonify({"message": "Post retweeted successfully!"}), 201
     
     except ValueError as e:
-        return jsonify({"Erro": str(e)}), 400
+        return jsonify({"Error": str(e)}), 400
     
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
+        return jsonify({"Error": "An internal server error occurred."}), 500
     
 @post_bp.route('/<int:post_id>', methods=['GET'])
 @jwt_required()
 def get_post_details(post_id):
     current_user_id = int(get_jwt_identity())
     try:
-        resultado = PostService.retweet_post(original_post_id=post_id, user_id=current_user_id)
-        status_code = 201 if resultado["acao"] == "adicionado" else 200
+        result = PostService.retweet_post(original_post_id=post_id, user_id=current_user_id)
+        status_code = 201 if result["action"] == "added" else 200
 
         return jsonify({
-            "mensagem": resultado["mensagem"],
-            "acao": resultado["acao"]
+            "message": result["message"],
+            "action": result["action"]
         }), status_code
     
     except ValueError as e:
-        return jsonify({"Erro": str(e)}), 400
+        return jsonify({"Error": str(e)}), 400
     except Exception as e:
         import traceback
         traceback.print_exc()
-        return jsonify({"Erro": "Ocorreu um erro interno no servidor."}), 500
+        return jsonify({"Error": "An internal server error occurred."}), 500

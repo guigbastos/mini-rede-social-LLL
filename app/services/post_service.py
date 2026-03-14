@@ -6,15 +6,15 @@ class PostService:
     @staticmethod
     def create_post(author_id: int, content: str) -> Post:
         if not content or not content.strip():
-            raise ValueError("O conteúdo da postagem não pode ser vazio.")
+            raise ValueError("Post content cannot be empty.")
         
         if len(content) > 280:
-            raise ValueError("A postagem ultrapassa o limite de caracteres (280).")
+            raise ValueError("Post content cannot exceed 280 characters.")
         
         author = UserRepository.get_by_id(author_id)
 
         if not author.is_active:
-            raise ValueError("O autor da postagem não está ativo.")
+            raise ValueError("Post author is not active.")
         
         new_post = Post(
             content=content.strip(),
@@ -32,10 +32,10 @@ class PostService:
         post = PostRepository.get_by_id(post_id)
 
         if not post or not post.is_active:
-            raise ValueError("Postagem não foi encontrada ou foi removida.")
+            raise ValueError("Post not found or removed.")
         
         if post.author_id != requesting_user_id and requesting_user_role not in ['admin', 'moderator']:
-            raise ValueError("Você não tem permissão para excluir esta postagem.")
+            raise ValueError("You don't have permission to delete this post.")
         
         post.is_active = False
         PostRepository.update(post)
@@ -50,13 +50,13 @@ class PostService:
         post = PostRepository.get_by_id(post_id)
 
         if not user:
-            raise ValueError("Usuário não encontrado.")
+            raise ValueError("User not found.")
         
         if not post:
-            raise ValueError("Postagem não encontrada ou removida.")
+            raise ValueError("Post not found or removed.")
 
         if PostRepository.is_liked_by(post, user):
-            raise ValueError("Você já curtiu esta postagem.")
+            raise ValueError("You already liked this post.")
         
         PostRepository.like(post, user)
 
@@ -66,13 +66,13 @@ class PostService:
         post = PostRepository.get_by_id(post_id)
 
         if not user:
-            raise ValueError("Usuário não encontrado.")
+            raise ValueError("User not found.")
         
         if not post or not post.is_active:
-            raise ValueError("Postagem não encontrada ou removida.")
+            raise ValueError("Post not found or removed.")
         
         if not PostRepository.is_liked_by(post, user):
-            raise ValueError("Você não curtiu esta postagem para poder descurtir.")
+            raise ValueError("You haven't liked this post yet.")
         
         PostRepository.unlike(post, user)
 
@@ -82,10 +82,10 @@ class PostService:
         original_post = PostRepository.get_by_id(original_post_id)
 
         if not user:
-            raise ValueError("Usuário não encontrado.")
+            raise ValueError("User not found.")
         
         if not original_post or not original_post.is_active:
-            raise ValueError("Postagem original não encontrada ou removida.")
+            raise ValueError("Original post not found or removed.")
         
         existing_retweet = PostRepository.get_user_retweet(original_post_id, user_id)
 
@@ -93,16 +93,16 @@ class PostService:
             existing_retweet.is_active = False
 
             PostRepository.save(existing_retweet)
-            return {"acao": "removido", "mensagem": "Retweet desfeito com succeso!"}
+            return {"action": "removed", "message": "Removed retweet."}
         else:
             from app.models.post import Post
-            novo_retweet = Post(
+            new_retweet = Post(
                 content="",
                 author_id=user_id,
                 original_post_id=original_post.id
             )
-            PostRepository.save(novo_retweet)
-            return {"acao": "adicionado", "mensagem": "Retweet feito com succeso!"}
+            PostRepository.save(new_retweet)
+            return {"action": "added", "message": "Retweeted!"}
 
 
 

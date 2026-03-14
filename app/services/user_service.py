@@ -6,10 +6,13 @@ class UserService:
     @staticmethod
     def create_user(username: str, email: str, password: str) -> User:
         if UserRepository.get_by_email(email):
-            raise ValueError("Este e-mail já está em uso.")
+            raise ValueError("This email is already in use.")
         
         if UserRepository.get_by_username(username):
-            raise ValueError("Este nome de usuário já está em uso.")
+            raise ValueError("This username is already in use.")
+        
+        if len(password) < 6:
+            raise ValueError("Password must have at least 6 characters.")
         
         hashed_password = generate_password_hash(password)
 
@@ -34,32 +37,32 @@ class UserService:
     @staticmethod
     def follow_user(follower_id: int, followed_id: int) -> None:
         if follower_id == followed_id:
-            raise ValueError("Você não pode seguir a si mesmo.")
+            raise ValueError("You can't follow yourself.")
         
         follower = UserRepository.get_by_id(follower_id)
         followed = UserRepository.get_by_id(followed_id)
 
         if not follower or not followed:
-            raise ValueError("Usuário não encontrado.")
+            raise ValueError("User not found.")
         
         if UserRepository.is_following(follower, followed):
-            raise ValueError("Você já está seguindo este usuário.")
+            raise ValueError("You are already following this user.")
         
         UserRepository.follow(follower, followed)
 
     @staticmethod
     def unfollow_user(follower_id: int, followed_id: int) -> None:
         if follower_id == followed_id:
-            raise ValueError("Você não pode deixar de seguir a si mesmo.")
+            raise ValueError("You can't unfollow yourself.")
         
         follower = UserRepository.get_by_id(follower_id)
         followed = UserRepository.get_by_id(followed_id)
 
         if not follower or not followed:
-            raise ValueError("Usuário não encontrado.")
+            raise ValueError("User not found.")
 
         if UserRepository.is_following(follower, followed):
-            raise ValueError("Você não está seguindo este usuário.")
+            raise ValueError("You are not following this user.")
         
         UserRepository.unfollow(follower, followed)
 
