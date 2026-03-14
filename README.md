@@ -59,5 +59,8 @@ Certifique-se de ter o [Python 3](https://www.python.org/) e o [PostgreSQL](http
 
 ## 🛣️ Roadmap
 
-- [ ] Refatoração e documentação de rotas.
+- [ ] Sistema de contagem de curtidas.
+- [ ] Sistema de contagem de seguidores.
+- [ ] Sistema de denuncia.
+- [ ] Sistema de rate limit de postagens.
 - [ ] Desenvolvimento de um Front-end para consumir a API.
