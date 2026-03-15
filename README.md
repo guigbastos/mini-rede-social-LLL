@@ -59,8 +59,22 @@ Certifique-se de ter o [Python 3](https://www.python.org/) e o [PostgreSQL](http
 
 ## 🛣️ Roadmap
 
-- [ ] Sistema de contagem de curtidas.
-- [ ] Sistema de contagem de seguidores.
-- [ ] Sistema de denuncia.
-- [ ] Sistema de rate limit de postagens.
-- [ ] Desenvolvimento de um Front-end para consumir a API.
+### 🛡️ Segurança, Acesso & Moderação (RBAC)
+- [ ] **Elevação de Privilégios:** Interface de API para Administradores gerenciarem e alterarem a *role* de usuários (ex: Promover para Moderador).
+- [ ] **Moderação de Contas:** Endpoint para Moderadores aplicarem bloqueios ou suspensões em contas infratoras.
+- [ ] **Validação de Estado (Account Lockout):** Regra de negócio estrita para impedir criação de postagens ou interações por contas bloqueadas.
+
+### ⚙️ Gestão Administrativa (Backoffice)
+- [ ] **Gestão Central de Usuários (Admin):** CRUD completo (Criação, Edição e Soft/Hard Delete) para controle total dos registros de usuários.
+- [ ] **Sistema de Reporte (Denúncias):** Fluxo para usuários reportarem postagens e contas que violem as diretrizes da comunidade.
+
+### 📝 Conteúdo & Engajamento Social
+- [ ] **Atualização de Conteúdo:** Endpoint (`PUT/PATCH`) permitindo que autores modifiquem o texto de postagens já publicadas.
+- [ ] **Métricas de Engajamento:** Sistema otimizado de contagem de curtidas por postagem.
+- [ ] **Métricas de Conexão:** Sistema otimizado de contagem de "Seguidores" e "Seguindo" nos perfis de usuário.
+
+### 🚦 Estabilidade & Prevenção de Abuso
+- [ ] **Rate Limiting (Anti-Spam):** Limitação programada do volume de requisições de postagens para evitar *flood* e sobrecarga no banco de dados.
+
+### 🌐 Ecossistema & Integração
+- [ ] **Aplicação Cliente (Front-end):** Desenvolvimento de interface gráfica interativa (SPA) para consumo e integração completa com a API REST.
