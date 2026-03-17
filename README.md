@@ -60,9 +60,9 @@ Certifique-se de ter o [Python 3](https://www.python.org/) e o [PostgreSQL](http
 ## 🛣️ Roadmap
 
 ### 🛡️ Segurança, Acesso & Moderação (RBAC)
-- [ ] **Elevação de Privilégios:** Interface de API para Administradores gerenciarem e alterarem a *role* de usuários (ex: Promover para Moderador).
-- [ ] **Moderação de Contas:** Endpoint para Moderadores aplicarem bloqueios ou suspensões em contas infratoras.
-- [ ] **Validação de Estado (Account Lockout):** Regra de negócio estrita para impedir criação de postagens ou interações por contas bloqueadas.
+- [X] **Elevação de Privilégios:** Interface de API para Administradores gerenciarem e alterarem a *role* de usuários (ex: Promover para Moderador).
+- [X] **Moderação de Contas:** Endpoint para Moderadores aplicarem bloqueios ou suspensões em contas infratoras.
+- [X] **Validação de Estado (Account Lockout):** Regra de negócio estrita para impedir criação de postagens ou interações por contas bloqueadas.
 
 ### ⚙️ Gestão Administrativa (Backoffice)
 - [ ] **Gestão Central de Usuários (Admin):** CRUD completo (Criação, Edição e Soft/Hard Delete) para controle total dos registros de usuários.

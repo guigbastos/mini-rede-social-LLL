@@ -66,4 +66,81 @@ class UserService:
         
         UserRepository.unfollow(follower, followed)
 
+    @staticmethod
+    def promote_user(target_user_id: int, requester_id: int) -> dict:
+        requester = UserRepository.get_by_id(requester_id)
+        target_user = UserRepository.get_by_id(target_user_id)
 
+        if not requester or requester.role != 'admin':
+            raise ValueError("Only admins can promote users.")
+
+        if not target_user:
+            raise ValueError("User not found.")
+
+        if target_user.role == 'moderator':
+            raise ValueError("User is already a moderator.")
+
+        target_user.role = 'moderator'
+        UserRepository.update(target_user)
+
+        return {"message": f"User {target_user.username} has been promoted to moderator"}
+    
+    @staticmethod
+    def demote_user(target_user_id: int, requester_id: int) -> dict:
+        requester = UserRepository.get_by_id(requester_id)
+        target_user = UserRepository.get_by_id(target_user_id)
+
+        if not requester or requester.role != 'admin':
+            raise ValueError("Only admins can demote users.")
+        
+        if not target_user:
+            raise ValueError("User not found.")
+        
+        if target_user.role == 'user':
+            raise ValueError("User is already a user.")
+        
+        if target_user.role == 'admin':
+            raise ValueError("You can't demote an admin.")
+        
+        target_user.role = 'user'
+        UserRepository.update(target_user)
+
+        return {"message": f"User {target_user.username} has been demoted to user"}
+    
+    @staticmethod
+    def toggle_user_block(target_user_id: int, requester_id: int) -> dict:
+        requester = UserRepository.get_by_id(requester_id)
+        target_user = UserRepository.get_by_id(target_user_id)
+
+        if not requester or requester.role == 'admin':
+            raise PermissionError("Access denied! Only moderators and admins can block users.")
+
+    @staticmethod
+    def get_followers(user_id: int) -> list:
+        user = UserRepository.get_by_id(user_id)
+
+        if not user:
+            raise ValueError("User not found.")
+        
+        followers = user.followers.all()
+        return [{
+            "id": follower.id,
+            "username": follower.username,
+            "role": follower.role
+            } for follower in followers
+            ]
+    @staticmethod
+    def get_following(user_id: int) -> list:
+        user = UserRepository.get_by_id(user_id)
+
+        if not user:
+            raise ValueError("User not found.")
+        
+        following = user.followed.all()
+
+        return [{
+            "id": followed.id,
+            "username": followed.username,
+            "role": followed.role
+            } for followed in following
+            ]

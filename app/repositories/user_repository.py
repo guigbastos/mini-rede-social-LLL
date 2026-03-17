@@ -34,15 +34,3 @@ class UserRepository:
     @staticmethod
     def is_following(follower: User, followed: User) -> bool:
         return follower.followed.filter_by(id=followed.id).first() is not None
-    
-    @staticmethod
-    def follow(follower: User, followed: User) -> None:
-        if not UserRepository.is_following(follower, followed):
-            follower.followed.append(followed)
-            db.session.commit()
-
-    @staticmethod
-    def unfollow(follower: User, followed: User) -> None:
-        if UserRepository.is_following(follower, followed):
-            follower.followed.remove(followed)
-            db.session.commit();

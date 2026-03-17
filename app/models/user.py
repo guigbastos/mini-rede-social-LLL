@@ -19,6 +19,9 @@ class User(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    is_blocked = db.Column(db.Boolean, default=False, nullable=False)
+    blocked_at = db.Column(db.DateTime)
+
     followed = db.relationship(
         'User',
         secondary=followers_table,
