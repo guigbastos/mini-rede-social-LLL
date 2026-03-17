@@ -1,3 +1,14 @@
+<div align="right">
+  <a href="https://github.com/guigbastos/mini-rede-social-LLL/blob/main/README-en.md">
+    <img alt="English" src="https://img.shields.io/badge/English-blue?style=for-the-badge&logo=us">
+  </a>
+  <a href="https://github.com/guigbastos/mini-rede-social-LLL/blob/main/README.md">
+    <img alt="Português" src="https://img.shields.io/badge/Português-green?style=for-the-badge&logo=br">
+  </a>
+</div>
+
+---
+
 # 📱 Mini Rede Social API
 
 Uma API RESTful robusta para uma rede social, desenvolvida com Python e Flask. Este projeto foca em boas práticas de Engenharia de Software, incluindo Clean Code, padrão de arquitetura em camadas (Controller, Service, Repository) e segurança de dados.
