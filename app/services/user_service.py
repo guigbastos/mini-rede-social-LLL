@@ -144,3 +144,78 @@ class UserService:
             "role": followed.role
             } for followed in following
             ]
+    
+    @staticmethod
+    def get_all_users(requester_id: int) -> list:
+        requester = UserRepository.get_by_id(requester_id)
+
+        if not requester or requester.role != 'admin':
+            raise PermissionError("Access denied! Only admins can view all users.")
+        
+        users = UserRepository.get_users()
+
+        return[{
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role,
+            "is_active": user.is_active,
+            "is_blocked": user.is_blocked,
+        } for user in users]
+    
+    @staticmethod
+    def admin_update_user(target_user_id: int, requester_id: int, data: dict) -> dict:
+        requester = UserRepository.get_by_id(requester_id)
+        target_user = UserRepository.get_by_id(target_user_id)
+
+        if not requester or requester.role != 'admin':
+            raise PermissionError("Access denied! Only admins can update users.")
+        
+        if not target_user:
+            raise ValueError("User not found.")
+        
+        if 'username' in data:
+            target_user.username = data['username']
+
+        if 'email' in data:
+            target_user.email = data['email']
+
+        UserRepository.update(target_user)
+
+        return {"message": f"User {target_user.username} has been updated."}
+    
+    @staticmethod
+    def admin_delete_user(target_user_id: int, requester_id: int) -> dict:
+        requester = UserRepository.get_by_id(requester_id)
+        target_user = UserRepository.get_by_id(target_user_id)
+
+        if not requester or requester.role != 'admin':
+            raise PermissionError("Access denied! Only admins can delete users.")
+        
+        if not target_user:
+            raise ValueError("User not found.")
+        
+        if target_user.role == 'admin':
+            raise ValueError("You can't delete an admin.")
+        
+        target_user.is_active = False
+        UserRepository.update(target_user)
+
+        return {"message": f"User {target_user.username} has been deactivated."}
+
+    @staticmethod
+    def admin_reactivate_user(target_user_id: int, requester_id: int) -> dict:
+        requester = UserRepository.get_by_id(requester_id)
+        target_user = UserRepository.get_by_id(target_user_id)
+
+        if not requester or requester.role != 'admin':
+            raise PermissionError("Access denied! Only admins can reactivate users.")
+
+        
+        if not target_user:
+            raise ValueError("User not found.")
+        
+        target_user.is_active = True
+        UserRepository.update(target_user)
+
+        return {"message": f"User {target_user.username} has been reactivated."}

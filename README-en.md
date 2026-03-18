@@ -76,11 +76,11 @@ Make sure you have [Python 3](https://www.python.org/) and [PostgreSQL](https://
 - [X] **State Validation (Account Lockout):** Strict business rule to prevent post creation or interactions by blocked accounts.
 
 ### ⚙️ Administrative Management (Backoffice)
-- [ ] **Central User Management (Admin):** Full CRUD (Creation, Editing, and Soft/Hard Delete) for total control over user records.
+- [X] **Central User Management (Admin):** Full CRUD (Creation, Editing, and Soft/Hard Delete) for total control over user records.
 - [ ] **Reporting System (Complaints):** Workflow for users to report posts and accounts that violate community guidelines.
 
 ### 📝 Content & Social Engagement
-- [ ] **Content Update:** Endpoint (`PUT/PATCH`) allowing authors to modify the text of already published posts.
+- [X] **Content Update:** Endpoint (`PUT/PATCH`) allowing authors to modify the text of already published posts.
 - [ ] **Engagement Metrics:** Optimized system for counting likes per post.
 - [ ] **Connection Metrics:** Optimized system for counting "Followers" and "Following" on user profiles.
 

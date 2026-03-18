@@ -256,3 +256,62 @@ def get_post_details(post_id):
         import traceback
         traceback.print_exc()
         return jsonify({"error": "An internal server error occurred."}), 500
+@post_bp.route('/<int:post_id>', methods=['PUT'])
+@jwt_required()
+def update_post(post_id):
+    """
+    ---
+    tags:
+       - Posts
+    security:
+      - Bearer: []
+    summary: Update any post.
+    parameters:
+       - in: path
+         name: post_id
+         type: integer
+         required: true
+         description: ID of the post to update
+       - in: body
+         name: body
+         required: true
+         schema:
+           type: object
+           properties:
+             text:
+               type: string
+               example: "Updated post content"
+    responses:
+       200:
+        description: Post updated successfully
+       400:
+        description: Validation error (e.g., empty content)
+       403:
+        description: Access denied (You're not the author of the post)
+       404:
+        description: Post not found
+       500:
+        description: Internal server error
+    """
+    current_user_id = int(get_jwt_identity())
+    data = request.get_json()
+
+    try:
+        result = PostService.update_post(
+            post_id,
+            current_user_id,
+            data
+        )
+        return jsonify(result), 200
+    
+    except ValueError as e:
+        status_code = 404 if "not found" in str(e).lower() else 400
+        return jsonify({"error": str(e)}), status_code
+    
+    except PermissionError as e:
+        return jsonify({"error": str(e)}), 403
+    
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "An internal server error occurred."}), 500

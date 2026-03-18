@@ -104,6 +104,25 @@ class PostService:
             PostRepository.create(new_retweet)
             return {"action": "added", "message": "Retweeted!"}
 
+    @staticmethod
+    def update_post(post_id: int,author_id: int, data: dict) -> dict:
+        post = PostRepository.get_by_id(post_id)
 
-
+        if not post:
+            raise ValueError("Post not found.")
         
+        if post.author_id != author_id:
+            raise ValueError("You don't have permission to update this post.")
+        
+        if 'content' not in data or not data['content'].strip():
+            raise ValueError("Post content cannot be empty.")
+        
+        post.content = data['content']
+        PostRepository.update(post)
+
+        return {
+            "message": "Post updated successfully.",
+            "post": {
+                "id": post.id,
+                "content": post.content}
+        }

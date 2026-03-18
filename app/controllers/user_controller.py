@@ -418,3 +418,186 @@ def get_following(user_id):
         import traceback
         traceback.print_exc()
         return jsonify({"error": "An internal server error occurred."}), 500
+    
+@user_bp.route('/admin/users', methods=['GET'])
+@jwt_required()
+def get_all_users():
+    """
+    ---
+    tags:
+       - Users - Admin
+    security:
+      - Bearer: []
+    summary: List every user of the system.
+    responses:
+       200:
+        description: Users list retrieved successfully
+       401:
+        description: Missing or invalid token
+       403:
+        description: Access denied (only admins can view all users)
+       500:
+        description: Internal server error
+    """
+    current_user_id = int(get_jwt_identity())
+
+    try:
+        users = UserService.get_all_users(current_user_id)
+        return jsonify(users), 200
+    
+    except PermissionError as e:
+        return jsonify({"error": str(e)}), 403
+    
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+
+        return jsonify({"error": "An internal server error occurred."}), 500
+    
+@user_bp.route('/admin/users/<int:user_id>', methods=['PUT'])
+@jwt_required()
+def admin_update_user(user_id):
+    """
+    ---
+    tags:
+       - Users - Admin
+    security:
+      - Bearer: []
+    summary: Update data from any user.
+    parameters:
+       - in: path
+         name: user_id
+         type: integer
+         required: true
+       - in: body
+         name: body
+         required: true
+         schema:
+           type: object
+           properties:
+             username:
+               type: string
+               example: NewUsername
+             email:
+               type: string
+               example: name@example.com
+    responses:
+       200:
+        description: User updated successfully
+       400:
+        description: Validation error
+       403:
+        description: Access denied (only admins can update users)
+       500:
+        description: Internal server error
+    """
+    current_user_id = int(get_jwt_identity())
+    data = request.get_json()
+
+    try: 
+        result = UserService.admin_update_user(
+            user_id,
+            current_user_id,
+            data
+        )
+        return jsonify(result), 200
+    
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    
+    except PermissionError as e:
+        return jsonify({"error": str(e)}), 403
+    
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "An internal server error occurred."}), 500
+@user_bp.route('/admin/users/<int:user_id>', methods=['DELETE'])
+@jwt_required()
+def admin_delete_user(user_id):
+    """
+    ---
+    tags:
+       - Users - Admin
+    security:
+      - Bearer: []
+    summary: Delete any user.
+    parameters:
+       - in: path
+         name: user_id
+         type: integer
+         required: true
+    responses:
+       200:
+        description: User deleted successfully
+       400:
+        description: Validation error
+       403:
+        description: Access denied (only admins can delete users)
+       500:
+        description: Internal server error
+    """
+    current_user_id = int(get_jwt_identity())
+
+    try:
+        result = UserService.admin_delete_user(
+            user_id,
+            current_user_id
+        )
+        return jsonify(result), 200
+    
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    
+    except PermissionError as e:
+        return jsonify({"error": str(e)}), 403
+    
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "An internal server error occurred."}), 500
+    
+@user_bp.route('/admin/users/<int:user_id>/reactivate', methods=['POST'])
+@jwt_required()
+def admin_reactivate_user(user_id):
+    """
+    ---
+    tags:
+       - Users - Admin
+    security:
+      - Bearer: []
+    summary: Reactivate any user.
+    parameters:
+       - in: path
+         name: user_id
+         type: integer
+         required: true
+    responses:
+       200:
+        description: User reactivated successfully
+       400:
+        description: Validation error
+       403:
+        description: Access denied (only admins can reactivate users)
+       500:
+        description: Internal server error
+    """
+    current_user_id = int(get_jwt_identity())
+
+    try:
+        result = UserService.admin_reactivate_user(
+            user_id,
+            current_user_id
+        )
+        return jsonify(result), 200
+    
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    
+    except PermissionError as e:
+        return jsonify({"error": str(e)}), 403
+    
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "An internal server error occurred."}), 500

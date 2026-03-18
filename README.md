@@ -76,11 +76,11 @@ Certifique-se de ter o [Python 3](https://www.python.org/) e o [PostgreSQL](http
 - [X] **Validação de Estado (Account Lockout):** Regra de negócio estrita para impedir criação de postagens ou interações por contas bloqueadas.
 
 ### ⚙️ Gestão Administrativa (Backoffice)
-- [ ] **Gestão Central de Usuários (Admin):** CRUD completo (Criação, Edição e Soft/Hard Delete) para controle total dos registros de usuários.
+- [X] **Gestão Central de Usuários (Admin):** CRUD completo (Criação, Edição e Soft/Hard Delete) para controle total dos registros de usuários.
 - [ ] **Sistema de Reporte (Denúncias):** Fluxo para usuários reportarem postagens e contas que violem as diretrizes da comunidade.
 
 ### 📝 Conteúdo & Engajamento Social
-- [ ] **Atualização de Conteúdo:** Endpoint (`PUT/PATCH`) permitindo que autores modifiquem o texto de postagens já publicadas.
+- [X] **Atualização de Conteúdo:** Endpoint (`PUT/PATCH`) permitindo que autores modifiquem o texto de postagens já publicadas.
 - [ ] **Métricas de Engajamento:** Sistema otimizado de contagem de curtidas por postagem.
 - [ ] **Métricas de Conexão:** Sistema otimizado de contagem de "Seguidores" e "Seguindo" nos perfis de usuário.
 

@@ -34,3 +34,7 @@ class UserRepository:
     @staticmethod
     def is_following(follower: User, followed: User) -> bool:
         return follower.followed.filter_by(id=followed.id).first() is not None
+
+    @staticmethod
+    def get_users() -> list:
+        return User.query.all()
