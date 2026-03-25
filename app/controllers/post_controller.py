@@ -2,10 +2,12 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.post_service import PostService
 from app.repositories.user_repository import UserRepository
+from app import limiter
 
 post_bp = Blueprint('posts', __name__, url_prefix='/posts')
 
 @post_bp.route('/', methods=['POST'])
+@limiter.limit("10 per minute")
 @jwt_required()
 def create_post():
     """
@@ -240,15 +242,33 @@ def retweet_post(post_id):
 @post_bp.route('/<int:post_id>', methods=['GET'])
 @jwt_required()
 def get_post_details(post_id):
+    """
+    ---
+    tags:
+       - Posts
+    security:
+      - Bearer: []
+    summary: Get details of a specific post.
+    parameters:
+       - in: path
+         name: post_id
+         type: integer
+         required: true
+         description: ID of the post to retrieve
+    responses:
+       200:
+        description: Post details retrieved successfully
+       401:
+        description: Missing or invalid token
+       404:
+        description: Post not found
+       500:
+        description: Internal server error
+    """
     current_user_id = int(get_jwt_identity())
     try:
-        result = PostService.retweet_post(original_post_id=post_id, user_id=current_user_id)
-        status_code = 201 if result["action"] == "added" else 200
-
-        return jsonify({
-            "message": result["message"],
-            "action": result["action"]
-        }), status_code
+        post_data = PostService.get_post_details(post_id)
+        return jsonify(post_data), 200
     
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
@@ -256,6 +276,7 @@ def get_post_details(post_id):
         import traceback
         traceback.print_exc()
         return jsonify({"error": "An internal server error occurred."}), 500
+    
 @post_bp.route('/<int:post_id>', methods=['PUT'])
 @jwt_required()
 def update_post(post_id):

@@ -13,8 +13,14 @@ class PostService:
         
         author = UserRepository.get_by_id(author_id)
 
+        if not author:
+            raise ValueError("Author not found.")
+
         if not author.is_active:
             raise ValueError("Post author is not active.")
+        
+        if author.is_blocked:
+            raise ValueError("Your account is blocked. You cannot create new posts.")
         
         new_post = Post(
             content=content.strip(),

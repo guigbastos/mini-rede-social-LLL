@@ -372,7 +372,13 @@ def get_followers(user_id):
     """
     try: 
         followers = UserService.get_followers(user_id)
-        return jsonify(followers), 200
+        profile = UserService.get_profile(user_id)
+        return jsonify({
+            "user_id": user_id,
+            "followers_count": profile["followers_count"],
+            "following_count": profile["following_count"],
+            "followers": followers
+        }), 200
     
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
@@ -409,7 +415,13 @@ def get_following(user_id):
     """
     try:
         following = UserService.get_following(user_id)
-        return jsonify(following), 200
+        profile = UserService.get_user_profile(user_id)
+        return jsonify({
+            "user_id": user_id,
+            "follwers_count": profile["followers_count"],
+            "following_count": profile["following_count"],
+            "following": following
+        }), 200
     
     except ValueError as e:
         return jsonify({"error": str(e)}), 400

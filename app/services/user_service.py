@@ -61,7 +61,7 @@ class UserService:
         if not follower or not followed:
             raise ValueError("User not found.")
 
-        if UserRepository.is_following(follower, followed):
+        if not UserRepository.is_following(follower, followed):
             raise ValueError("You are not following this user.")
         
         UserRepository.unfollow(follower, followed)
@@ -112,8 +112,45 @@ class UserService:
         requester = UserRepository.get_by_id(requester_id)
         target_user = UserRepository.get_by_id(target_user_id)
 
-        if not requester or requester.role == 'admin':
+        if not requester or requester.role not in ['admin', 'moderator']:
             raise PermissionError("Access denied! Only moderators and admins can block users.")
+        
+        if not target_user:
+            raise ValueError("User not found.")
+        
+        if requester.role == 'moderator' and target_user.role == 'admin':
+            raise ValueError("You can't block an admin.")
+        
+        if target_user.is_blocked:
+            target_user.is_blocked = False
+            target_user.blocked_at = None
+            action = "unblocked"
+        else:
+            target_user.is_blocked = True
+            target_user.blocked_at = None
+            action = "blocked"
+
+        UserRepository.update(target_user)
+
+        return {"message": f"User {target_user.username} has been {action}."}
+    
+    @staticmethod
+    def get_user_profile(target_user_id: int) -> dict:
+        user = UserRepository.get_by_id(target_user_id)
+
+        if not user:
+            raise ValueError("User not found.")
+        
+        return {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role,
+            "is_blocked": user.is_blocked,
+            "followers_count": user.followers.count(),
+            "following_count": user.followed.count(),
+            "created_at": user.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        }
 
     @staticmethod
     def get_followers(user_id: int) -> list:

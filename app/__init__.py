@@ -1,6 +1,8 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import os
 from dotenv import load_dotenv
 from flasgger import Swagger
@@ -9,6 +11,11 @@ load_dotenv()
 
 db = SQLAlchemy()
 jwt = JWTManager()
+
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits= []
+)
 
 def create_app():
     app = Flask(__name__)
@@ -57,6 +64,8 @@ def create_app():
     from app.models.user import User
     from app.models.post import Post
     from app.models.comment import Comment
+    from app.models.report import Report
+
 
     with app.app_context():
         db.create_all()
@@ -69,6 +78,16 @@ def create_app():
 
     from app.controllers.comment_controller import comment_bp
     app.register_blueprint(comment_bp)
+
+    from app.controllers.report_controller import report_bp
+    app.register_blueprint(report_bp)
+
+    @app.errorhandler(429)
+    def rate_limite_handler(e):
+        return jsonify({
+            "error": "Too many requests!",
+            "retry_after": str(e.description)
+        }), 429
 
     @app.route("/")
     def index():
